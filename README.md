@@ -20,9 +20,10 @@ Then try the other project:
 2. Browse to http://localhost:4444 and open devtools -> network
 3. Click on the link a bunch of times and watch the image only get loaded once
 
+When i do this i see [this diff between the headers in Fiddler gist](https://gist.github.com/jugglingnutcase/b35c3ee15b650bb5291b).
+
 i'm using Chrome Version 33.0.1750.146 m on Windows. Maybe this doesn't happen in other browsers? The whole reason i'm doing this is because i'm seeing this crop up in a real-world application on iOS Mobile Safari as well and it's messing up images used in real-time updates i have going in SignalR.
 
-When i do this i see [this diff between the headers in Fiddler gist](https://gist.github.com/jugglingnutcase/b35c3ee15b650bb5291b).
 
 Questions
 ---------
