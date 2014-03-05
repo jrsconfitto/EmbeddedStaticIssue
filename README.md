@@ -17,8 +17,9 @@ To test this
 Then try the other project:
 
 1. Select the Demo.Embedded project
-2. Browse to http://localhost:4444 and open devtools -> network
-3. Click on the link a bunch of times and watch the image only get loaded once
+2. Run it
+3. Browse to http://localhost:4444 and open devtools -> network
+4. Click on the link a bunch of times and watch the image only get loaded once
 
 When i do this i see [this diff between the headers in Fiddler gist](https://gist.github.com/jugglingnutcase/b35c3ee15b650bb5291b).
 
