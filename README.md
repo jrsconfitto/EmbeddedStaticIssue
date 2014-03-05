@@ -1,7 +1,7 @@
 EmbeddedStaticIssue
 ===================
 
-A repro repo for issues with my fork of Nancy.Embedded.
+A repro repo for issues with my fork of [Nancy.Embedded](http://github.com/jugglingnutcase/Nancy.Embedded).
 
 ![i-feel-like-im-taking-crazy-pills](https://f.cloud.github.com/assets/238079/2337099/48208558-a499-11e3-83cc-d207e1145506.gif)
 
