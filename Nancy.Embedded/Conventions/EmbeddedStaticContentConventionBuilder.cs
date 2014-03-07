@@ -1,4 +1,4 @@
-﻿namespace NancyEmbedded.Conventions
+﻿namespace Nancy.Embedded.Conventions
 {
     using System;
     using System.Collections.Concurrent;
@@ -6,24 +6,20 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
-    using Nancy;
-    using Nancy.Helpers;
-    using Nancy.Responses;
+    using Helpers;
+    using Responses;
 
     /// <summary>
     /// Allows the use of embedded resources for static content in Nancy
     /// </summary>
     public class EmbeddedStaticContentConventionBuilder
     {
-        private static readonly ConcurrentDictionary<string, Func<NancyContext, Response>> ResponseFactoryCache;
+        private static readonly ConcurrentDictionary<string, Func<Response>> ResponseFactoryCache;
         private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
-
-        private static DateTime LastModifiedTime;
 
         static EmbeddedStaticContentConventionBuilder()
         {
-            ResponseFactoryCache = new ConcurrentDictionary<string, Func<NancyContext, Response>>();
-            LastModifiedTime = DateTime.UtcNow;
+            ResponseFactoryCache = new ConcurrentDictionary<string, Func<Response>>();
         }
 
         /// <summary>
@@ -40,7 +36,7 @@
             {
                 requestedPath = string.Concat("/", requestedPath);
             }
-
+                
             return (ctx, root) =>
             {
                 var path =
@@ -69,11 +65,11 @@
                 var responseFactory =
                     ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, requestedPath, contentPath, assembly, allowedExtensions));
 
-                return responseFactory.Invoke(ctx);
+                return responseFactory.Invoke();
             };
         }
 
-        private static Func<string, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string requestedPath, string contentPath, Assembly assembly, string[] allowedExtensions)
+        private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string requestedPath, string contentPath, Assembly assembly, string[] allowedExtensions)
         {
             return requestPath =>
             {
@@ -84,7 +80,7 @@
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested extension '", extension, "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
-                    return (ctx) => null;
+                    return () => null;
                 }
 
                 var transformedRequestPath =
@@ -103,7 +99,7 @@
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The request '", fileName, "' is trying to access a path outside the content folder '", contentPath, "'")));
-                    return (ctx) => null;
+                    return () => null;
                 }
 
                 var resourceName =
@@ -115,15 +111,11 @@
                 if (!assembly.GetManifestResourceNames().Any(x => string.Equals(x, resourceName + "." + fileName, StringComparison.OrdinalIgnoreCase)))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested resource '", requestPath, "' was not found in assembly '", assembly.GetName().Name, "'")));
-                    return (ctx) => null;
+                    return () => null;
                 }
 
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] Returning file '", fileName, "'")));
-
-                // Set a Last-Modified header time to now to return with the resource
-                DateTime lastModifiedDate = DateTime.UtcNow;
-
-                return (ctx) => new NancyEmbedded.EmbeddedFileResponse(assembly, resourceName, fileName, lastModifiedDate, ctx);
+                return () => new EmbeddedFileResponse(assembly, resourceName, fileName);
             };
         }
 

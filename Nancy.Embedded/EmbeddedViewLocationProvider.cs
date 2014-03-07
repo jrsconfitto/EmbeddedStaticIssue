@@ -1,6 +1,5 @@
-﻿namespace NancyEmbedded
+﻿namespace Nancy.Embedded
 {
-    using Nancy;
     using Nancy.ViewEngines;
     using System;
     using System.Collections.Generic;

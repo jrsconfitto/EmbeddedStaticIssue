@@ -1,6 +1,5 @@
-﻿namespace NancyEmbedded
+﻿namespace Nancy.Embedded
 {
-    using Nancy;
     using Nancy.Bootstrapper;
     using Nancy.ViewEngines;
 

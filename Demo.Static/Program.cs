@@ -5,7 +5,7 @@
 
     public static class Program
     {
-        private const string BaseUri = "http://localhost:4444/";
+        private const string BaseUri = "http://localhost:8080/";
 
         public static void Main()
         {

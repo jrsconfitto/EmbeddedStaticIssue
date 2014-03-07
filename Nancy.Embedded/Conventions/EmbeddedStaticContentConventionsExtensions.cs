@@ -1,6 +1,5 @@
-﻿namespace NancyEmbedded.Conventions
+﻿namespace Nancy.Embedded.Conventions
 {
-    using Nancy;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
